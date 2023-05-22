@@ -865,6 +865,7 @@ static char *vfio_devnode(const struct device *dev, umode_t *mode)
 	return kasprintf(GFP_KERNEL, "vfio/%s", dev_name(dev));
 }
 
+/* caller vfio_init */
 int __init vfio_group_init(void)
 {
 	int ret;

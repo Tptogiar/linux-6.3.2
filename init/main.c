@@ -835,6 +835,7 @@ static void __init report_meminit(void)
 /*
  * Set up kernel memory allocators
  */
+/* caller start_kernel */
 static void __init mm_init(void)
 {
 	/*

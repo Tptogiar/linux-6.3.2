@@ -3318,6 +3318,7 @@ static bool amd_iommu_sme_check(void)
  * IOMMUs
  *
  ****************************************************************************/
+/* caller pci_iommu_alloc */
 int __init amd_iommu_detect(void)
 {
 	int ret;

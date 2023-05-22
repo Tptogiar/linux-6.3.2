@@ -1393,6 +1393,7 @@ EXPORT_SYMBOL(vfio_dma_rw);
 /*
  * Module/class support
  */
+/* caller module_init(vfio_init) */
 static int __init vfio_init(void)
 {
 	int ret;

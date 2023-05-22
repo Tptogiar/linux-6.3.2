@@ -915,6 +915,7 @@ dmar_validate_one_drhd(struct acpi_dmar_header *entry, void *arg)
 	return 0;
 }
 
+/* caller pci_iommu_alloc */
 void __init detect_intel_iommu(void)
 {
 	int ret;

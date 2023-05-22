@@ -727,6 +727,7 @@ static void __init test_wp_bit(void)
 	panic("Linux doesn't support CPUs with broken WP.");
 }
 
+/* caller mm_init */
 void __init mem_init(void)
 {
 	pci_iommu_alloc();

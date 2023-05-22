@@ -405,6 +405,9 @@ struct vfio_container *vfio_container_from_file(struct file *file)
 	return container;
 }
 
+/* use in: vfio_container_init
+ * 		   vfio_container_cleanup
+ */
 static struct miscdevice vfio_dev = {
 	.minor = VFIO_MINOR,
 	.name = "vfio",
@@ -570,6 +573,7 @@ int vfio_device_container_dma_rw(struct vfio_device *device,
 				   write);
 }
 
+/* caller vfio_group_init */
 int __init vfio_container_init(void)
 {
 	int ret;

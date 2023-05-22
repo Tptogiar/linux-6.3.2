@@ -110,6 +110,7 @@ static inline void __init pci_xen_swiotlb_init(void)
 }
 #endif /* CONFIG_SWIOTLB_XEN */
 
+/* caller mem_init */
 void __init pci_iommu_alloc(void)
 {
 	if (xen_pv_domain()) {

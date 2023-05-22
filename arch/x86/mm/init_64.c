@@ -1328,6 +1328,7 @@ failed:
 	panic("Failed to pre-allocate %s pages for vmalloc area\n", lvl);
 }
 
+/* caller mm_init */
 void __init mem_init(void)
 {
 	pci_iommu_alloc();
