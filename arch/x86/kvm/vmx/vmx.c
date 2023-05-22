@@ -105,7 +105,9 @@ static bool __read_mostly fasteoi = 1;
 module_param(fasteoi, bool, S_IRUGO);
 
 module_param(enable_apicv, bool, S_IRUGO);
-
+/* assignment: hardware_setup
+ * use in: vmx_can_use_ipiv
+ */
 bool __read_mostly enable_ipiv = true;
 module_param(enable_ipiv, bool, 0444);
 
@@ -4670,6 +4672,7 @@ static inline int vmx_get_pid_table_order(struct kvm *kvm)
 	return get_order(kvm->arch.max_vcpu_ids * sizeof(*to_kvm_vmx(kvm)->pid_table));
 }
 
+/* caller vmx_vcpu_precreate */
 static int vmx_alloc_ipiv_pid_table(struct kvm *kvm)
 {
 	struct page *pages;
@@ -4689,6 +4692,7 @@ static int vmx_alloc_ipiv_pid_table(struct kvm *kvm)
 	return 0;
 }
 
+/* use in: vmx_x86_ops */
 static int vmx_vcpu_precreate(struct kvm *kvm)
 {
 	return vmx_alloc_ipiv_pid_table(kvm);

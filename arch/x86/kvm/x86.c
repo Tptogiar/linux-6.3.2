@@ -4597,6 +4597,7 @@ static int kvm_x86_dev_has_attr(struct kvm_device_attr *attr)
 	}
 }
 
+/* caller kvm_dev_ioctl */
 long kvm_arch_dev_ioctl(struct file *filp,
 			unsigned int ioctl, unsigned long arg)
 {
@@ -6673,6 +6674,7 @@ static int kvm_vm_ioctl_set_clock(struct kvm *kvm, void __user *argp)
 	return 0;
 }
 
+/* caller kvm_vm_ioctl */
 long kvm_arch_vm_ioctl(struct file *filp,
 		       unsigned int ioctl, unsigned long arg)
 {

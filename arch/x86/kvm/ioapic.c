@@ -604,6 +604,7 @@ static inline int ioapic_in_range(struct kvm_ioapic *ioapic, gpa_t addr)
 		 (addr < ioapic->base_address + IOAPIC_MEM_LENGTH)));
 }
 
+/* use in: ioapic_mmio_ops */
 static int ioapic_mmio_read(struct kvm_vcpu *vcpu, struct kvm_io_device *this,
 				gpa_t addr, int len, void *val)
 {
@@ -711,6 +712,7 @@ static const struct kvm_io_device_ops ioapic_mmio_ops = {
 	.write    = ioapic_mmio_write,
 };
 
+/* caller kvm_arch_vm_ioctl */
 int kvm_ioapic_init(struct kvm *kvm)
 {
 	struct kvm_ioapic *ioapic;
