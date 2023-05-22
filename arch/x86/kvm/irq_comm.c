@@ -44,6 +44,12 @@ static int kvm_set_ioapic_irq(struct kvm_kernel_irq_routing_entry *e,
 				line_status);
 }
 
+/* caller synic_set_irq &
+ * 		  ioapic_service &
+ * 		  kvm_set_msi &
+ * 		  kvm_apic_send_ipi &
+ * 		  kvm_pv_kick_cpu_op
+ */
 int kvm_irq_delivery_to_apic(struct kvm *kvm, struct kvm_lapic *src,
 		struct kvm_lapic_irq *irq, struct dest_map *dest_map)
 {

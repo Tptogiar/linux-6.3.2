@@ -31,6 +31,12 @@ static DEFINE_PER_CPU(struct list_head, wakeup_vcpus_on_cpu);
  */
 static DEFINE_PER_CPU(raw_spinlock_t, wakeup_vcpus_on_cpu_lock);
 
+/* caller vmx_vcpu_pi_load &
+ * 		  pi_enable_wakeup_handler &
+ * 		  vmx_vcpu_pi_put &
+ * 		  pi_has_pending_interrupt &
+ * 		  vmx_pi_update_irte
+ */
 static inline struct pi_desc *vcpu_to_pi_desc(struct kvm_vcpu *vcpu)
 {
 	return &(to_vmx(vcpu)->pi_desc);
@@ -50,6 +56,7 @@ static int pi_try_set_control(struct pi_desc *pi_desc, u64 *pold, u64 new)
 	return 0;
 }
 
+/* caller vmx_vcpu_load */
 void vmx_vcpu_pi_load(struct kvm_vcpu *vcpu, int cpu)
 {
 	struct pi_desc *pi_desc = vcpu_to_pi_desc(vcpu);
@@ -237,6 +244,9 @@ void __init pi_init_cpu(int cpu)
 	raw_spin_lock_init(&per_cpu(wakeup_vcpus_on_cpu_lock, cpu));
 }
 
+/* use in: vmx_x86_ops
+ * caller kvm_arch_dy_has_pending_interrupt
+ */
 bool pi_has_pending_interrupt(struct kvm_vcpu *vcpu)
 {
 	struct pi_desc *pi_desc = vcpu_to_pi_desc(vcpu);

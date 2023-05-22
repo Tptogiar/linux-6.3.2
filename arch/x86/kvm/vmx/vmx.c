@@ -1458,6 +1458,9 @@ void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu,
  * Switches to specified vcpu, until a matching vcpu_put(), but assumes
  * vcpu mutex is already taken.
  */
+/* use in: vmx_x86_ops
+ * caller kvm_arch_vcpu_load
+ */
 static void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
 {
 	struct vcpu_vmx *vmx = to_vmx(vcpu);
@@ -4188,6 +4191,7 @@ static inline void kvm_vcpu_trigger_posted_interrupt(struct kvm_vcpu *vcpu,
 	kvm_vcpu_wake_up(vcpu);
 }
 
+/* caller vmx_deliver_posted_interrupt */
 static int vmx_deliver_nested_posted_interrupt(struct kvm_vcpu *vcpu,
 						int vector)
 {
@@ -4227,6 +4231,7 @@ static int vmx_deliver_nested_posted_interrupt(struct kvm_vcpu *vcpu,
  * 2. If target vcpu isn't running(root mode), kick it to pick up the
  * interrupt from PIR in next vmentry.
  */
+/* caller vmx_deliver_interrupt */
 static int vmx_deliver_posted_interrupt(struct kvm_vcpu *vcpu, int vector)
 {
 	struct vcpu_vmx *vmx = to_vmx(vcpu);
@@ -4257,6 +4262,9 @@ static int vmx_deliver_posted_interrupt(struct kvm_vcpu *vcpu, int vector)
 	return 0;
 }
 
+/* use in: vmx_x86_ops 
+ * caller __apic_accept_irq 
+ */
 static void vmx_deliver_interrupt(struct kvm_lapic *apic, int delivery_mode,
 				  int trig_mode, int vector)
 {

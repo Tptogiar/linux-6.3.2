@@ -4720,6 +4720,9 @@ static bool need_emulate_wbinvd(struct kvm_vcpu *vcpu)
 	return kvm_arch_has_noncoherent_dma(vcpu->kvm);
 }
 
+/* caller vcpu_load 
+ * 		  kvm_sched_in
+ */
 void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
 {
 	/* Address WBINVD may be executed by guest */
@@ -4731,6 +4734,7 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
 					wbinvd_ipi, NULL, 1);
 	}
 
+	/* vmx_vcpu_load  svm_vcpu_load */
 	static_call(kvm_x86_vcpu_load)(vcpu, cpu);
 
 	/* Save host pkru register if supported */
@@ -12756,6 +12760,9 @@ int kvm_arch_vcpu_runnable(struct kvm_vcpu *vcpu)
 	return kvm_vcpu_running(vcpu) || kvm_vcpu_has_events(vcpu);
 }
 
+/* caller kvm_arch_dy_runnable &
+ * 		  kvm_vcpu_on_spin
+ */
 bool kvm_arch_dy_has_pending_interrupt(struct kvm_vcpu *vcpu)
 {
 	if (kvm_vcpu_apicv_active(vcpu) &&

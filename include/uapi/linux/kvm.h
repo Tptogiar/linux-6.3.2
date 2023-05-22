@@ -1514,6 +1514,7 @@ struct kvm_s390_ucas_mapping {
 #define KVM_ASSIGN_SET_INTX_MASK  _IOW(KVMIO,  0xa4, \
 				       struct kvm_assigned_pci_dev)
 /* Available with KVM_CAP_SIGNAL_MSI */
+/* use in: kvm_vm_ioctl */
 #define KVM_SIGNAL_MSI            _IOW(KVMIO,  0xa5, struct kvm_msi)
 /* Available with KVM_CAP_PPC_GET_SMMU_INFO */
 #define KVM_PPC_GET_SMMU_INFO	  _IOR(KVMIO,  0xa6, struct kvm_ppc_smmu_info)

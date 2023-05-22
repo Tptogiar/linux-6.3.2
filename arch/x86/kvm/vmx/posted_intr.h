@@ -48,6 +48,7 @@ static inline bool pi_test_and_clear_sn(struct pi_desc *pi_desc)
 			(unsigned long *)&pi_desc->control);
 }
 
+/* caller vmx_deliver_posted_interrupt */
 static inline bool pi_test_and_set_pir(int vector, struct pi_desc *pi_desc)
 {
 	return test_and_set_bit(vector, (unsigned long *)pi_desc->pir);

@@ -776,6 +776,14 @@ static int __apic_accept_irq(struct kvm_lapic *apic, int delivery_mode,
 			     int vector, int level, int trig_mode,
 			     struct dest_map *dest_map);
 
+
+/* caller stimer_notify_direct &
+ * 		  kvm_hv_send_ipi_to_many &
+ * 		  kvm_irq_delivery_to_apic &
+ * 		  __pv_send_ipi &
+ * 		  kvm_irq_delivery_to_apic_fast &
+ * 		  kvm_arch_async_page_present
+ */
 int kvm_apic_set_irq(struct kvm_vcpu *vcpu, struct kvm_lapic_irq *irq,
 		     struct dest_map *dest_map)
 {
@@ -1244,6 +1252,9 @@ bool kvm_intr_is_single_vcpu_fast(struct kvm *kvm, struct kvm_lapic_irq *irq,
  * Add a pending IRQ into lapic.
  * Return 1 if successfully added and 0 if discarded.
  */
+/* caller kvm_apic_set_irq & 
+ * 		  kvm_apic_local_deliver
+ */
 static int __apic_accept_irq(struct kvm_lapic *apic, int delivery_mode,
 			     int vector, int level, int trig_mode,
 			     struct dest_map *dest_map)
@@ -1281,6 +1292,7 @@ static int __apic_accept_irq(struct kvm_lapic *apic, int delivery_mode,
 						       apic->regs + APIC_TMR);
 		}
 
+		/* vmx_deliver_interrupt & svm_deliver_interrupt */
 		static_call(kvm_x86_deliver_interrupt)(apic, delivery_mode,
 						       trig_mode, vector);
 		break;
@@ -1458,6 +1470,11 @@ void kvm_apic_set_eoi_accelerated(struct kvm_vcpu *vcpu, int vector)
 }
 EXPORT_SYMBOL_GPL(kvm_apic_set_eoi_accelerated);
 
+/* caller kvm_lapic_reg_write &
+ * 		  kvm_x2apic_icr_write &
+ * 		  kvm_apic_write_nodecode &
+ * 		  avic_incomplete_ipi_interception
+ */
 void kvm_apic_send_ipi(struct kvm_lapic *apic, u32 icr_low, u32 icr_high)
 {
 	struct kvm_lapic_irq irq;
@@ -2714,6 +2731,11 @@ int apic_has_pending_timer(struct kvm_vcpu *vcpu)
 	return 0;
 }
 
+/* caller kvm_apic_inject_pending_timer_irqs &
+ * 		  kvm_apic_nmi_wd_deliver &
+ * 		  kvm_pmu_deliver_pmi &
+ * 		  kvm_vcpu_x86_set_ucna
+ */
 int kvm_apic_local_deliver(struct kvm_lapic *apic, int lvt_type)
 {
 	u32 reg = kvm_lapic_get_reg(apic, lvt_type);
