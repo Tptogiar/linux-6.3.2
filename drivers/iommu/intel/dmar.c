@@ -290,6 +290,9 @@ int dmar_remove_dev_scope(struct dmar_pci_notify_info *info, u16 segment,
 	return 0;
 }
 
+/* caller dmar_pci_bus_notifier &
+ * 		  dmar_dev_scope_init
+ */
 static int dmar_pci_bus_add_dev(struct dmar_pci_notify_info *info)
 {
 	int ret = 0;
@@ -801,6 +804,9 @@ static int __init dmar_acpi_dev_scope_init(void)
 	return 0;
 }
 
+/* caller intel_iommu_init
+ * 		  ir_dev_scope_init
+ */
 int __init dmar_dev_scope_init(void)
 {
 	struct pci_dev *dev = NULL;
@@ -840,7 +846,9 @@ void __init dmar_register_bus_notifier(void)
 	bus_register_notifier(&pci_bus_type, &dmar_pci_bus_nb);
 }
 
-
+/* caller intel_iommu_init
+ * 		  intel_prepare_irq_remapping
+ */
 int __init dmar_table_init(void)
 {
 	static int dmar_table_initialized;

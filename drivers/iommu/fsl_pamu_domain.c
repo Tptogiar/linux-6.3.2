@@ -29,6 +29,7 @@ static struct fsl_dma_domain *to_fsl_dma_domain(struct iommu_domain *dom)
 	return container_of(dom, struct fsl_dma_domain, iommu_domain);
 }
 
+/* caller pamu_domain_init */
 static int __init iommu_init_mempool(void)
 {
 	fsl_pamu_domain_cache = kmem_cache_create("fsl_pamu_domain",

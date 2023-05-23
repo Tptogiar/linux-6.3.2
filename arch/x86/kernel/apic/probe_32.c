@@ -134,6 +134,7 @@ static int __init parse_apic(char *arg)
 }
 early_param("apic", parse_apic);
 
+/* caller apic_intr_mode_init */
 void __init default_setup_apic_routing(void)
 {
 	int version = boot_cpu_apic_version;

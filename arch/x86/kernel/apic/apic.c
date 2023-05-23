@@ -1413,6 +1413,9 @@ void __init init_bsp_APIC(void)
 static void __init apic_bsp_setup(bool upmode);
 
 /* Init the interrupt delivery mode for the BSP */
+/* use in: x86_init 
+ * tptogair_x86_init_ops_x86_init
+ */
 void __init apic_intr_mode_init(void)
 {
 	bool upmode = IS_ENABLED(CONFIG_UP_LATE_INIT);

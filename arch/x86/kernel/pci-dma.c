@@ -189,6 +189,7 @@ static __init int iommu_setup(char *p)
 }
 early_param("iommu", iommu_setup);
 
+/* caller rootfs_initcall(pci_iommu_init) */
 static int __init pci_iommu_init(void)
 {
 	x86_init.iommu.iommu_init();

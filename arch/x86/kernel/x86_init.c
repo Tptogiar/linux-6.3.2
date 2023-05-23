@@ -60,6 +60,7 @@ static __init void x86_wallclock_init(void)
  * The platform setup functions are preset with the default functions
  * for standard PC hardware.
  */
+#define tptogair_x86_init_ops_x86_init
 struct x86_init_ops x86_init __initdata = {
 
 	.resources = {

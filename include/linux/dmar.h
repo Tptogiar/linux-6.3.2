@@ -35,6 +35,8 @@ struct dmar_dev_scope {
 
 #ifdef CONFIG_DMAR_TABLE
 extern struct acpi_table_header *dmar_tbl;
+
+/* drhd -> acpi_dmar_hardware_unit */
 struct dmar_drhd_unit {
 	struct list_head list;		/* list of drhd units	*/
 	struct  acpi_dmar_header *hdr;	/* ACPI header		*/
@@ -148,7 +150,7 @@ extern int dmar_release_one_atsr(struct acpi_dmar_header *hdr, void *arg);
 extern int dmar_iommu_hotplug(struct dmar_drhd_unit *dmaru, bool insert);
 extern int dmar_iommu_notify_scope_dev(struct dmar_pci_notify_info *info);
 #else /* !CONFIG_INTEL_IOMMU: */
-static inline int intel_iommu_init(void) { return -ENODEV; }
+// for read code static inline int intel_iommu_init(void) { return -ENODEV; }
 static inline void intel_iommu_shutdown(void) { }
 
 #define	dmar_parse_one_rmrr		dmar_res_noop
@@ -194,9 +196,9 @@ static inline bool dmar_platform_optin(void)
 	return false;
 }
 
-static inline void detect_intel_iommu(void)
-{
-}
+// for read code static inline void detect_intel_iommu(void)
+// for read code {
+// for read code }
 
 #endif /* CONFIG_DMAR_TABLE */
 

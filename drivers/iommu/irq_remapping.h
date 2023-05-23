@@ -29,6 +29,7 @@ struct irq_remap_ops {
 	int capability;
 
 	/* Initializes hardware and makes it ready for remapping interrupts */
+	/* intel_prepare_irq_remapping */
 	int  (*prepare)(void);
 
 	/* Enables the remapping hardware */

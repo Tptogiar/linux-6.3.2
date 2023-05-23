@@ -58,6 +58,7 @@ static __init int parse_nopv(char *arg)
 }
 early_param("nopv", parse_nopv);
 
+/* caller init_hypervisor_platform */
 static inline const struct hypervisor_x86 * __init
 detect_hypervisor_vendor(void)
 {
@@ -92,6 +93,7 @@ static void __init copy_array(const void *src, void *target, unsigned int size)
 			to[i] = from[i];
 }
 
+/* caller setup_arch */
 void __init init_hypervisor_platform(void)
 {
 	const struct hypervisor_x86 *h;

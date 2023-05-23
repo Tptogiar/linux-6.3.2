@@ -283,6 +283,7 @@ DEFINE_IDTENTRY_SYSVEC(sysvec_x86_platform_ipi)
 }
 #endif
 
+#define tptogiar_irq_kvm_CONFIG_HAVE_KVM
 #ifdef CONFIG_HAVE_KVM
 static void dummy_handler(void) {}
 static void (*kvm_posted_intr_wakeup_handler)(void) = dummy_handler;

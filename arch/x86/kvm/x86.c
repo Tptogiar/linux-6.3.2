@@ -4824,6 +4824,9 @@ static void kvm_steal_time_set_preempted(struct kvm_vcpu *vcpu)
 	mark_page_dirty_in_slot(vcpu->kvm, ghc->memslot, gpa_to_gfn(ghc->gpa));
 }
 
+/* caller vcpu_put
+ * 		  kvm_sched_out
+ */
 void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
 {
 	int idx;
@@ -4844,6 +4847,7 @@ void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
 		srcu_read_unlock(&vcpu->kvm->srcu, idx);
 	}
 
+	/* vmx_vcpu_put  svm_vcpu_put */
 	static_call(kvm_x86_vcpu_put)(vcpu);
 	vcpu->arch.last_host_tsc = rdtsc();
 }
@@ -10392,6 +10396,7 @@ EXPORT_SYMBOL_GPL(__kvm_request_immediate_exit);
  * exiting to the userspace.  Otherwise, the value will be returned to the
  * userspace.
  */
+/* caller vcpu_run */
 static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
 {
 	int r;
@@ -10665,7 +10670,8 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
 		WARN_ON_ONCE((kvm_vcpu_apicv_activated(vcpu) != kvm_vcpu_apicv_active(vcpu)) &&
 			     (kvm_get_apic_mode(vcpu) != LAPIC_MODE_DISABLED));
 
-		exit_fastpath = static_call(kvm_x86_vcpu_run)(vcpu);
+		/* vmx_vcpu_run svm_vcpu_run */
+		exit_fastpath = static_call(kvm_x86_vcpu_run)(vcpu);                            /* run */
 		if (likely(exit_fastpath != EXIT_FASTPATH_REENTER_GUEST))
 			break;
 

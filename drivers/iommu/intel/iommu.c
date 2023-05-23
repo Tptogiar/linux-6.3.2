@@ -1910,6 +1910,9 @@ static inline void context_set_sm_pre(struct context_entry *context)
 /* Convert value to context PASID directory size field coding. */
 #define context_pdts(pds)	(((pds) & 0x7) << 9)
 
+/* caller domain_context_mapping
+ * 		  domain_context_mapping_cb
+ */
 static int domain_context_mapping_one(struct dmar_domain *domain,
 				      struct intel_iommu *iommu,
 				      struct pasid_table *table,
@@ -2063,6 +2066,7 @@ struct domain_context_mapping_data {
 	struct pasid_table *table;
 };
 
+/* cb -> callback */
 static int domain_context_mapping_cb(struct pci_dev *pdev,
 				     u16 alias, void *opaque)
 {
@@ -2073,6 +2077,7 @@ static int domain_context_mapping_cb(struct pci_dev *pdev,
 					  alias & 0xff);
 }
 
+/* caller dmar_domain_attach_device */
 static int
 domain_context_mapping(struct dmar_domain *domain, struct device *dev)
 {
@@ -2434,6 +2439,7 @@ static int __init si_domain_init(int hw)
 	return 0;
 }
 
+/* caller intel_iommu_attach_device */
 static int dmar_domain_attach_device(struct dmar_domain *domain,
 				     struct device *dev)
 {
@@ -3916,6 +3922,7 @@ static __init int tboot_force_iommu(void)
 	return 1;
 }
 
+/* use in: detect_intel_iommu */
 int __init intel_iommu_init(void)
 {
 	int ret = -ENODEV;
@@ -4250,6 +4257,7 @@ static int prepare_domain_attach_device(struct iommu_domain *domain,
 	return 0;
 }
 
+/* use in: intel_iommu_ops */
 static int intel_iommu_attach_device(struct iommu_domain *domain,
 				     struct device *dev)
 {

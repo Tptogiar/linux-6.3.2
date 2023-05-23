@@ -94,6 +94,10 @@ struct x86_init_timers {
  * @iommu_init:			platform specific iommu setup
  */
 struct x86_init_iommu {
+	/* use in: gart_iommu_init
+	 * 		   amd_iommu_init
+	 * 		   intel_iommu_init
+	 */
 	int (*iommu_init)(void);
 };
 

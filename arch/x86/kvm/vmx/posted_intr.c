@@ -113,12 +113,20 @@ void vmx_vcpu_pi_load(struct kvm_vcpu *vcpu, int cpu)
 		 * Clear SN (as above) and refresh the destination APIC ID to
 		 * handle task migration (@cpu != vcpu->cpu).
 		 */
+		/* 在把vCPU加在到物理CPU的时候，由于物理CPU换了，发给vCPU的
+		 * notification event 的 destination也得换 */
 		new.ndst = dest;
 		new.sn = 0;
 
 		/*
 		 * Restore the notification vector; in the blocking case, the
 		 * descriptor was modified on "put" to use the wakeup vector.
+		 */
+		/* 这里把notification vector 置为POSTED_INTR_VECTOR，是因为在
+		 * 初始化vmcs的时候 init_vmcs 或是重置的时候 __vmx_vcpu_reset ，
+		 * 给posted-interrupt notification vector设置
+		 * 的值统一都是POSTED_INTR_VECTOR，所以当物理CPU收到POSTED_INTR_VECTOR
+		 * 时就会认为是notification event
 		 */
 		new.nv = POSTED_INTR_VECTOR;
 	} while (pi_try_set_control(pi_desc, &old.control, new.control));
@@ -139,6 +147,7 @@ after_clear_sn:
 		pi_set_on(pi_desc);
 }
 
+/* vtd -> VT-d */
 static bool vmx_can_use_vtd_pi(struct kvm *kvm)
 {
 	return irqchip_in_kernel(kvm) && enable_apicv &&
@@ -150,6 +159,7 @@ static bool vmx_can_use_vtd_pi(struct kvm *kvm)
  * Put the vCPU on this pCPU's list of vCPUs that needs to be awakened and set
  * WAKEUP as the notification vector in the PI descriptor.
  */
+/* caller vmx_vcpu_pi_put */
 static void pi_enable_wakeup_handler(struct kvm_vcpu *vcpu)
 {
 	struct pi_desc *pi_desc = vcpu_to_pi_desc(vcpu);
@@ -182,11 +192,13 @@ static void pi_enable_wakeup_handler(struct kvm_vcpu *vcpu)
 	 * scheduled out).
 	 */
 	if (pi_test_on(&new))
+		/* tptogiar_irq_kvm_CONFIG_HAVE_KVM */
 		apic->send_IPI_self(POSTED_INTR_WAKEUP_VECTOR);
 
 	local_irq_restore(flags);
 }
 
+/* caller vmx_vcpu_pi_put */
 static bool vmx_needs_pi_wakeup(struct kvm_vcpu *vcpu)
 {
 	/*
@@ -200,6 +212,7 @@ static bool vmx_needs_pi_wakeup(struct kvm_vcpu *vcpu)
 	return vmx_can_use_ipiv(vcpu) || vmx_can_use_vtd_pi(vcpu->kvm);
 }
 
+/* caller vmx_vcpu_put */
 void vmx_vcpu_pi_put(struct kvm_vcpu *vcpu)
 {
 	struct pi_desc *pi_desc = vcpu_to_pi_desc(vcpu);

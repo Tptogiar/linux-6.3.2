@@ -856,7 +856,7 @@ static void __init x86_report_nx(void)
  *
  * Note: On x86_64, fixmaps are ready for use even before this is called.
  */
-
+/* caller start_kernel */
 void __init setup_arch(char **cmdline_p)
 {
 #ifdef CONFIG_X86_32

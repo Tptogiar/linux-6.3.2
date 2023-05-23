@@ -209,6 +209,7 @@ struct page *kvm_pfn_to_refcounted_page(kvm_pfn_t pfn)
 /*
  * Switches to specified vcpu, until a matching vcpu_put()
  */
+/* 加在vcpu上下文到物理cpu */
 void vcpu_load(struct kvm_vcpu *vcpu)
 {
 	int cpu = get_cpu();
