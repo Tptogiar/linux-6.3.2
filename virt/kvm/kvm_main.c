@@ -4806,6 +4806,22 @@ static long kvm_vm_ioctl(struct file *filp,
 		break;
 	}
 #ifdef CONFIG_HAVE_KVM_MSI
+/*
+kvm_vm_ioctl：KVM_SIGNAL_MSI
+    kvm_send_userspace_msi
+        kvm_set_msi
+            kvm_irq_delivery_to_apic
+                kvm_apic_set_irq
+                    __apic_accept_irq
+                        vmx_deliver_interrupt
+                            vmx_deliver_posted_interrupt
+                                pi_test_and_set_pir
+                                pi_test_and_set_on
+                                kvm_vcpu_trigger_posted_interrupt
+                            kvm_lapic_set_irr
+                            kvm_make_request
+                            kvm_vcpu_kick
+*/
 	case KVM_SIGNAL_MSI: {
 		struct kvm_msi msi;
 

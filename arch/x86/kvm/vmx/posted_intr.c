@@ -180,6 +180,14 @@ static void pi_enable_wakeup_handler(struct kvm_vcpu *vcpu)
 	do {
 		/* set 'NV' to 'wakeup vector' */
 		new.control = old.control;
+		/* (?todo-answer?: 为什么这里把notification vector 更新为POSTED_INTR_WAKEUP_VECTOR) 
+		 * (answer: 这里在把vcpu卸下后，这个vcpu还在物理CPU的wait_list里面，
+		 * 所以当其他vCPU发送posted-interrupt到这个vCPU的时候，还是会传递到当前
+		 * 这个物理CPU这里，但是当前物理CPU可能运行着其他的vCPU，且可能处于
+		 * no-root模式，为了让其能exit出来，所以不能和当前运行的vCPU的notification vector
+		 * 相同，不然就exit不出来了，所以对于已经卸下的vCPU的notification vector必须
+		 * 设置成与运行时不一样的vector，这样才能exit出来，才能去把目标vCPU加入到就绪队列)
+		 */
 		new.nv = POSTED_INTR_WAKEUP_VECTOR;
 	} while (pi_try_set_control(pi_desc, &old.control, new.control));
 
@@ -191,8 +199,11 @@ static void pi_enable_wakeup_handler(struct kvm_vcpu *vcpu)
 	 * enabled until it is safe to call try_to_wake_up() on the task being
 	 * scheduled out).
 	 */
+	/* 在把vCPU卸下来之前先检查有没有notification event */
 	if (pi_test_on(&new))
-		/* tptogiar_irq_kvm_CONFIG_HAVE_KVM */
+		/* tptogiar_irq_kvm_CONFIG_HAVE_KVM 
+		 * destination: pi_wakeup_handler
+		 */
 		apic->send_IPI_self(POSTED_INTR_WAKEUP_VECTOR);
 
 	local_irq_restore(flags);
@@ -234,6 +245,9 @@ void vmx_vcpu_pi_put(struct kvm_vcpu *vcpu)
 
 /*
  * Handler for POSTED_INTERRUPT_WAKEUP_VECTOR.
+ */
+/* use in: hardware_setup 
+ * caller tptogiar_sysvec_kvm_posted_intr_wakeup_ipi
  */
 void pi_wakeup_handler(void)
 {

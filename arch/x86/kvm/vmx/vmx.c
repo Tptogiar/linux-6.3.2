@@ -8132,6 +8132,9 @@ static void vmx_migrate_timers(struct kvm_vcpu *vcpu)
 	}
 }
 
+/* caller kvm_x86_vendor_exit
+ * 		  __kvm_x86_vendor_init
+ */
 static void vmx_hardware_unsetup(void)
 {
 	kvm_set_posted_intr_wakeup_handler(NULL);

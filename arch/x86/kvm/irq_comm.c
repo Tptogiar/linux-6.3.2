@@ -72,11 +72,12 @@ int kvm_irq_delivery_to_apic(struct kvm *kvm, struct kvm_lapic *src,
 	kvm_for_each_vcpu(i, vcpu, kvm) {
 		if (!kvm_apic_present(vcpu))
 			continue;
-
+		/* destination对不上 */
 		if (!kvm_apic_match_dest(vcpu, src, irq->shorthand,
 					irq->dest_id, irq->dest_mode))
 			continue;
 
+		/* prio 不够 */
 		if (!kvm_lowest_prio_delivery(irq)) {
 			if (r < 0)
 				r = 0;

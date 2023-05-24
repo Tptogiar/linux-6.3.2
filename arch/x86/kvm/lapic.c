@@ -2377,6 +2377,7 @@ static int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
 	return ret;
 }
 
+/* use in: apic_mmio_ops */
 static int apic_mmio_write(struct kvm_vcpu *vcpu, struct kvm_io_device *this,
 			    gpa_t address, int len, const void *data)
 {
@@ -2759,6 +2760,7 @@ void kvm_apic_nmi_wd_deliver(struct kvm_vcpu *vcpu)
 		kvm_apic_local_deliver(apic, APIC_LVT0);
 }
 
+/* use in: kvm_create_lapic */
 static const struct kvm_io_device_ops apic_mmio_ops = {
 	.read     = apic_mmio_read,
 	.write    = apic_mmio_write,

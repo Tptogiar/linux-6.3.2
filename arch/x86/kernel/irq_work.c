@@ -23,6 +23,7 @@ DEFINE_IDTENTRY_SYSVEC(sysvec_irq_work)
 	trace_irq_work_exit(IRQ_WORK_VECTOR);
 }
 
+/* caller __irq_work_queue_local */
 void arch_irq_work_raise(void)
 {
 	if (!arch_irq_work_has_interrupt())

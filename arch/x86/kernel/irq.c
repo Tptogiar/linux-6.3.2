@@ -288,6 +288,9 @@ DEFINE_IDTENTRY_SYSVEC(sysvec_x86_platform_ipi)
 static void dummy_handler(void) {}
 static void (*kvm_posted_intr_wakeup_handler)(void) = dummy_handler;
 
+/* caller hardware_setup
+ * 		  vmx_hardware_unsetup
+ */
 void kvm_set_posted_intr_wakeup_handler(void (*handler)(void))
 {
 	if (handler)
@@ -311,6 +314,7 @@ DEFINE_IDTENTRY_SYSVEC_SIMPLE(sysvec_kvm_posted_intr_ipi)
 /*
  * Handler for POSTED_INTERRUPT_WAKEUP_VECTOR.
  */
+#define tptogiar_sysvec_kvm_posted_intr_wakeup_ipi
 DEFINE_IDTENTRY_SYSVEC(sysvec_kvm_posted_intr_wakeup_ipi)
 {
 	ack_APIC_irq();
